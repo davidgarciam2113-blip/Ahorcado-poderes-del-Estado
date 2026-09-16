@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahorcado - División de poderes</title>
+<title>Ahorcado</title>
 
 <style>
 body {
@@ -11,10 +11,6 @@ body {
     background: #f4f6f8;
     text-align: center;
     padding: 30px;
-}
-
-h1 {
-    color: #1f3c88;
 }
 
 .container {
@@ -26,16 +22,21 @@ h1 {
     box-shadow: 0 0 15px #ccc;
 }
 
-#palabra {
-    font-size: 40px;
-    letter-spacing: 12px;
-    margin: 25px;
-    font-weight: bold;
+h1 {
+    color: #1f3c88;
 }
 
 #ahorcado {
     font-size: 80px;
     height: 100px;
+    margin: 20px;
+}
+
+#palabra {
+    font-size: 40px;
+    letter-spacing: 12px;
+    margin: 25px;
+    font-weight: bold;
 }
 
 button {
@@ -70,11 +71,9 @@ button:disabled {
 
 <div class="container">
 
-<h1>⚖️ El Ahorcado de los tres poderes</h1>
+<h1>⚖️ El Ahorcado</h1>
 
-<p>Encuentra las tres palabras clave:</p>
-
-<p><b>EJECUTIVO · LEGISLATIVO · JUDICIAL</b></p>
+<p>Descubre la palabra relacionada con la división de poderes.</p>
 
 <div id="ahorcado">🙂</div>
 
@@ -99,19 +98,19 @@ const palabras = [
 
 let palabra;
 let letrasCorrectas = [];
-let errores;
+let errores = 0;
 const maxErrores = 6;
 
 
 function iniciar(){
 
-    palabra = palabras[Math.floor(Math.random()*palabras.length)];
+    palabra = palabras[Math.floor(Math.random() * palabras.length)];
 
     letrasCorrectas = [];
 
     errores = 0;
 
-    document.getElementById("mensaje").innerHTML="";
+    document.getElementById("mensaje").innerHTML = "";
 
     crearLetras();
 
@@ -124,21 +123,21 @@ function crearLetras(){
 
     const contenedor = document.getElementById("letras");
 
-    contenedor.innerHTML="";
+    contenedor.innerHTML = "";
 
-    const abecedario="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    const abecedario = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
 
-    for(let letra of abecedario){
+    for (let letra of abecedario){
 
-        let boton=document.createElement("button");
+        let boton = document.createElement("button");
 
-        boton.innerHTML=letra;
+        boton.innerHTML = letra;
 
-        boton.onclick=function(){
+        boton.onclick = function(){
 
             comprobar(letra);
 
-            boton.disabled=true;
+            boton.disabled = true;
 
         };
 
@@ -151,11 +150,11 @@ function crearLetras(){
 
 function comprobar(letra){
 
-    if(palabra.includes(letra)){
+    if (palabra.includes(letra)){
 
         letrasCorrectas.push(letra);
 
-    }else{
+    } else {
 
         errores++;
 
@@ -168,27 +167,27 @@ function comprobar(letra){
 
 function actualizar(){
 
-    let texto="";
+    let texto = "";
 
-    for(let letra of palabra){
+    for (let letra of palabra){
 
-        if(letrasCorrectas.includes(letra)){
+        if (letrasCorrectas.includes(letra)){
 
-            texto+=letra+" ";
+            texto += letra + " ";
 
-        }else{
+        } else {
 
-            texto+="_ ";
+            texto += "_ ";
 
         }
 
     }
 
 
-    document.getElementById("palabra").innerHTML=texto;
+    document.getElementById("palabra").innerHTML = texto;
 
 
-    const dibujos=[
+    const dibujos = [
         "🙂",
         "😐",
         "😟",
@@ -199,23 +198,23 @@ function actualizar(){
     ];
 
 
-    document.getElementById("ahorcado").innerHTML=dibujos[errores];
+    document.getElementById("ahorcado").innerHTML = dibujos[errores];
 
 
-    if(!texto.includes("_")){
+    if (!texto.includes("_")){
 
-        document.getElementById("mensaje").innerHTML=
-        "🎉 ¡Correcto! La palabra era "+palabra;
+        document.getElementById("mensaje").innerHTML =
+        "🎉 ¡Correcto!";
 
         bloquear();
 
     }
 
 
-    if(errores>=maxErrores){
+    if (errores >= maxErrores){
 
-        document.getElementById("mensaje").innerHTML=
-        "❌ Has perdido. Era "+palabra;
+        document.getElementById("mensaje").innerHTML =
+        "❌ Fin del juego. La palabra era: " + palabra;
 
         bloquear();
 
@@ -226,9 +225,9 @@ function actualizar(){
 
 function bloquear(){
 
-    document.querySelectorAll("button").forEach(b=>{
+    document.querySelectorAll("#letras button").forEach(boton => {
 
-        b.disabled=true;
+        boton.disabled = true;
 
     });
 

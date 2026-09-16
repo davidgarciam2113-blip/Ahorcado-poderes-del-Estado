@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahorcado</title>
+<title>El Ahorcado</title>
 
 <style>
 body {
@@ -39,6 +39,12 @@ h1 {
     font-weight: bold;
 }
 
+#letras {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 button {
     margin: 5px;
     padding: 10px 14px;
@@ -56,6 +62,7 @@ button:hover {
 
 button:disabled {
     background: #aaa;
+    cursor: not-allowed;
 }
 
 #mensaje {
@@ -63,8 +70,8 @@ button:disabled {
     font-weight: bold;
     margin: 20px;
 }
-
 </style>
+
 </head>
 
 <body>
@@ -72,8 +79,6 @@ button:disabled {
 <div class="container">
 
 <h1>⚖️ El Ahorcado</h1>
-
-<p>Descubre la palabra relacionada con la división de poderes.</p>
 
 <div id="ahorcado">🙂</div>
 
@@ -83,7 +88,7 @@ button:disabled {
 
 <div id="mensaje"></div>
 
-<button onclick="reiniciar()">Nueva partida</button>
+<button id="nuevoJuego">Nueva partida</button>
 
 </div>
 
@@ -96,63 +101,70 @@ const palabras = [
     "JUDICIAL"
 ];
 
-let palabra;
-let letrasCorrectas = [];
+
+let palabraActual = "";
+let letrasAdivinadas = [];
 let errores = 0;
+
 const maxErrores = 6;
 
 
-function iniciar(){
+function iniciarJuego() {
 
-    palabra = palabras[Math.floor(Math.random() * palabras.length)];
+    palabraActual = palabras[Math.floor(Math.random() * palabras.length)];
 
-    letrasCorrectas = [];
+    letrasAdivinadas = [];
 
     errores = 0;
 
     document.getElementById("mensaje").innerHTML = "";
 
-    crearLetras();
+    crearBotones();
 
-    actualizar();
+    actualizarPantalla();
 
 }
 
 
-function crearLetras(){
 
-    const contenedor = document.getElementById("letras");
+function crearBotones() {
 
-    contenedor.innerHTML = "";
+    const zonaLetras = document.getElementById("letras");
 
-    const abecedario = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    zonaLetras.innerHTML = "";
 
-    for (let letra of abecedario){
+    const letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
 
-        let boton = document.createElement("button");
 
-        boton.innerHTML = letra;
+    for (let letra of letras) {
 
-        boton.onclick = function(){
+        const boton = document.createElement("button");
 
-            comprobar(letra);
+        boton.textContent = letra;
+
+        boton.addEventListener("click", function() {
+
+            comprobarLetra(letra);
 
             boton.disabled = true;
 
-        };
+        });
 
-        contenedor.appendChild(boton);
+
+        zonaLetras.appendChild(boton);
 
     }
 
 }
 
 
-function comprobar(letra){
 
-    if (palabra.includes(letra)){
+function comprobarLetra(letra) {
 
-        letrasCorrectas.push(letra);
+
+    if (palabraActual.includes(letra)) {
+
+        letrasAdivinadas.push(letra);
 
     } else {
 
@@ -160,31 +172,37 @@ function comprobar(letra){
 
     }
 
-    actualizar();
+
+    actualizarPantalla();
 
 }
 
 
-function actualizar(){
 
-    let texto = "";
 
-    for (let letra of palabra){
+function actualizarPantalla() {
 
-        if (letrasCorrectas.includes(letra)){
 
-            texto += letra + " ";
+    let palabraMostrada = "";
+
+
+    for (let letra of palabraActual) {
+
+        if (letrasAdivinadas.includes(letra)) {
+
+            palabraMostrada += letra + " ";
 
         } else {
 
-            texto += "_ ";
+            palabraMostrada += "_ ";
 
         }
 
     }
 
 
-    document.getElementById("palabra").innerHTML = texto;
+    document.getElementById("palabra").innerHTML = palabraMostrada;
+
 
 
     const dibujos = [
@@ -201,31 +219,35 @@ function actualizar(){
     document.getElementById("ahorcado").innerHTML = dibujos[errores];
 
 
-    if (!texto.includes("_")){
+
+    if (!palabraMostrada.includes("_")) {
 
         document.getElementById("mensaje").innerHTML =
-        "🎉 ¡Correcto!";
+        "🎉 ¡Has encontrado la palabra!";
 
-        bloquear();
+        bloquearLetras();
 
     }
 
 
-    if (errores >= maxErrores){
+
+    if (errores >= maxErrores) {
 
         document.getElementById("mensaje").innerHTML =
-        "❌ Fin del juego. La palabra era: " + palabra;
+        "❌ Fin del juego";
 
-        bloquear();
+        bloquearLetras();
 
     }
 
 }
 
 
-function bloquear(){
 
-    document.querySelectorAll("#letras button").forEach(boton => {
+
+function bloquearLetras() {
+
+    document.querySelectorAll("#letras button").forEach(function(boton){
 
         boton.disabled = true;
 
@@ -234,16 +256,20 @@ function bloquear(){
 }
 
 
-function reiniciar(){
-
-    iniciar();
-
-}
 
 
-iniciar();
+document.getElementById("nuevoJuego").addEventListener("click", function(){
+
+    iniciarJuego();
+
+});
+
+
+
+iniciarJuego();
 
 </script>
+
 
 </body>
 </html>

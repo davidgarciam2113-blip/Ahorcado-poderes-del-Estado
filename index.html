@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahorcado - División de poderes</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    text-align: center;
+    padding: 30px;
+}
+
+h1 {
+    color: #1f3c88;
+}
+
+.container {
+    background: white;
+    max-width: 700px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #ccc;
+}
+
+#palabra {
+    font-size: 40px;
+    letter-spacing: 12px;
+    margin: 25px;
+    font-weight: bold;
+}
+
+#ahorcado {
+    font-size: 80px;
+    height: 100px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 14px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    background: #1f3c88;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3156c9;
+}
+
+button:disabled {
+    background: #aaa;
+}
+
+#mensaje {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⚖️ El Ahorcado de los tres poderes</h1>
+
+<p>Encuentra las tres palabras clave:</p>
+
+<p><b>EJECUTIVO · LEGISLATIVO · JUDICIAL</b></p>
+
+<div id="ahorcado">🙂</div>
+
+<div id="palabra"></div>
+
+<div id="letras"></div>
+
+<div id="mensaje"></div>
+
+<button onclick="reiniciar()">Nueva partida</button>
+
+</div>
+
+
+<script>
+
+const palabras = [
+    "EJECUTIVO",
+    "LEGISLATIVO",
+    "JUDICIAL"
+];
+
+let palabra;
+let letrasCorrectas = [];
+let errores;
+const maxErrores = 6;
+
+
+function iniciar(){
+
+    palabra = palabras[Math.floor(Math.random()*palabras.length)];
+
+    letrasCorrectas = [];
+
+    errores = 0;
+
+    document.getElementById("mensaje").innerHTML="";
+
+    crearLetras();
+
+    actualizar();
+
+}
+
+
+function crearLetras(){
+
+    const contenedor = document.getElementById("letras");
+
+    contenedor.innerHTML="";
+
+    const abecedario="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+
+    for(let letra of abecedario){
+
+        let boton=document.createElement("button");
+
+        boton.innerHTML=letra;
+
+        boton.onclick=function(){
+
+            comprobar(letra);
+
+            boton.disabled=true;
+
+        };
+
+        contenedor.appendChild(boton);
+
+    }
+
+}
+
+
+function comprobar(letra){
+
+    if(palabra.includes(letra)){
+
+        letrasCorrectas.push(letra);
+
+    }else{
+
+        errores++;
+
+    }
+
+    actualizar();
+
+}
+
+
+function actualizar(){
+
+    let texto="";
+
+    for(let letra of palabra){
+
+        if(letrasCorrectas.includes(letra)){
+
+            texto+=letra+" ";
+
+        }else{
+
+            texto+="_ ";
+
+        }
+
+    }
+
+
+    document.getElementById("palabra").innerHTML=texto;
+
+
+    const dibujos=[
+        "🙂",
+        "😐",
+        "😟",
+        "😨",
+        "😱",
+        "💀",
+        "☠️"
+    ];
+
+
+    document.getElementById("ahorcado").innerHTML=dibujos[errores];
+
+
+    if(!texto.includes("_")){
+
+        document.getElementById("mensaje").innerHTML=
+        "🎉 ¡Correcto! La palabra era "+palabra;
+
+        bloquear();
+
+    }
+
+
+    if(errores>=maxErrores){
+
+        document.getElementById("mensaje").innerHTML=
+        "❌ Has perdido. Era "+palabra;
+
+        bloquear();
+
+    }
+
+}
+
+
+function bloquear(){
+
+    document.querySelectorAll("button").forEach(b=>{
+
+        b.disabled=true;
+
+    });
+
+}
+
+
+function reiniciar(){
+
+    iniciar();
+
+}
+
+
+iniciar();
+
+</script>
+
+</body>
+</html>
